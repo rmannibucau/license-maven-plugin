@@ -2,9 +2,64 @@ The following documentation is not up to date.
 
 Please help if you want to contribute!
 
-__Upcoming release__
+# Maven License Plugin (the Official and Original one) #
 
-__Lastest releases__ (note that it may take up to 1-2 days to be in Maven Central repository):
+When you are developing a project either in open source or in a company, you often need to add at the top of your source files a license to protect your work. I didn't find any maven plugin on Internet to help you maintain these license headers. By maintaining, i mean checking if the header is here or not, generating a report and of course having the possibility to update / reformat missing license headers.
+
+## Features
+
+  * `check`: check if header is missing in some source file
+  * `format`: add headers if missing
+  * `remove`: can remove existing header
+  * `update`: update existing header with a new one
+  * `custom mappings`: enables easy support of new file extensions
+  * `variable replacement`: You can add some variable in your header, such as ${year}, ${owner} and they will be replaced by the corresponding values taken from the pom or system properties.
+
+## Project
+
+ - __Build Status:__ [![Build Status](https://travis-ci.org/mycila/license-maven-plugin.png?branch=master)](https://travis-ci.org/mycila/license-maven-plugin)
+ - __Issues:__ https://github.com/mycila/license-maven-plugin/issues
+ - __License:__ [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=ready&title=Ready)](http://waffle.io/mycila/license-maven-plugin)
+[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=in-progress&title=In%20Progress)](http://waffle.io/mycila/license-maven-plugin)
+[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=under-review&title=Under%20Review)](http://waffle.io/mycila/license-maven-plugin)
+
+## Contributors
+
+* [@mathieucarbou](https://github.com/mathieucarbou)
+* [@sebhoss](https://github.com/sebhoss)
+* [@ppalaga](https://github.com/ppalaga)
+* [@McFoggy](https://github.com/McFoggy)
+* [@eincs](https://github.com/eincs)
+* [@mcculls](https://github.com/mcculls)
+* [@stain](https://github.com/stain)
+* [@adamretter](https://github.com/adamretter)
+* [@vromero](https://github.com/vromero)
+* [@hgschmie](https://github.com/hgschmie)
+* [@mirabilos](https://github.com/mirabilos)
+
+## New / Upcoming release
+
+* __4.0__ (2019-02) - see [issues and pull requests](https://github.com/mycila/license-maven-plugin/issues?q=milestone%3A4.0)
+
+<span style="color:red;font-weight:bold;">BREAKING CHANGES</span>
+
+1. [Remove FreeBSD blurb from the BSD 2-clause license](https://github.com/mycila/license-maven-plugin/pull/139)
+2. [Renamed license.errorMessage](https://github.com/mycila/license-maven-plugin/pull/125)
+3. [Changed default style](https://github.com/mycila/license-maven-plugin/pull/109) for Java and JavaFX to SLASHSTAR instead of JAVADOC
+
+__New features__
+
+1. [New style `JAVAPKG_STYLE`](https://github.com/mycila/license-maven-plugin/pull/115)
+2. [New property `COPYRIGHT_CREATION_YEAR_KEY`](https://github.com/mycila/license-maven-plugin/pull/145) when using the Git addon
+3. [New property `license.nThreads`](https://github.com/mycila/license-maven-plugin/pull/146)
+4. [Force inclusion of a pattern from the default exclusion list](https://github.com/mycila/license-maven-plugin/pull/147)
+5. [New style `SINGLE_LINE_DOUBLESLASH_STYLE`](https://github.com/mycila/license-maven-plugin/pull/148) Same as DOUBLESLASH_STYLE but without the first and last empty line 
+
+## Lastest releases
+
+Note that it may take up to 1-2 days to be in Maven Central repository.
 
 * [3.0](http://repo1.maven.org/maven2/com/mycila/license-maven-plugin/3.0/) (2016-08-20) - see [issues and pull requests](https://github.com/mycila/license-maven-plugin/issues?q=milestone%3A3.0)
 * [3.0.rc1](http://repo1.maven.org/maven2/com/mycila/license-maven-plugin/3.0.rc1/) (2016-04-26) - see [issues and pull requests](https://github.com/mycila/license-maven-plugin/issues?q=milestone%3A3.0.rc1)
@@ -25,43 +80,6 @@ __Lastest releases__ (note that it may take up to 1-2 days to be in Maven Centra
 		- [Properties](#properties-and-placeholders)
 		- [Supported comment types](#supported-comment-types)
 		- [Changing header style definitions](#changing-header-style-definitions)
-
-# Maven License Plugin (the Official and Original one) #
-
-Basically, when you are developing a project either in open source or in a company, you often need to add at the top of your source files a license to protect your work. I didn't find any maven plugin on Internet to help you maintain these license headers. By maintaining, i mean checking if the header is here or not, generating a report and of course having the possibility to update / reformat missing license headers.
-
-__Features:__
-
-  * `check`: check if header is missing in some source file
-  * `format`: add headers if missing
-  * `remove`: can remove existing header
-  * `update`: update existing header with a new one
-  * `custom mappings`: enables easy support of new file extensions
-  * `variable replacement`: You can add some variable in your header, such as ${year}, ${owner} and they will be replaced by the corresponding values taken from the pom or system properties.
-
-__Project:__
-
- - __Build Status:__ [![Build Status](https://travis-ci.org/mycila/license-maven-plugin.png?branch=master)](https://travis-ci.org/mycila/license-maven-plugin)
- - __Issues:__ https://github.com/mycila/license-maven-plugin/issues
- - __License:__ [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=ready&title=Ready)](http://waffle.io/mycila/license-maven-plugin)
-[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=in-progress&title=In%20Progress)](http://waffle.io/mycila/license-maven-plugin)
-[![](https://badge.waffle.io/mycila/license-maven-plugin.svg?label=under-review&title=Under%20Review)](http://waffle.io/mycila/license-maven-plugin)
-
-__Contributors__
-
-* [@mathieucarbou](https://github.com/mathieucarbou)
-* [@sebhoss](https://github.com/sebhoss)
-* [@ppalaga](https://github.com/ppalaga)
-* [@McFoggy](https://github.com/McFoggy)
-* [@eincs](https://github.com/eincs)
-* [@mcculls](https://github.com/mcculls)
-* [@stain](https://github.com/stain)
-* [@adamretter](https://github.com/adamretter)
-* [@vromero](https://github.com/vromero)
-* [@hgschmie](https://github.com/hgschmie)
-* [@mirabilos](https://github.com/mirabilos)
 
 ## Maven Repository ##
 
