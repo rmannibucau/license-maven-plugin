@@ -16,11 +16,19 @@
 package com.mycila.maven.plugin.license.util;
 
 import com.mycila.maven.plugin.license.Default;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,6 +36,9 @@ import static org.junit.Assert.assertTrue;
  * @author Mathieu Carbou (mathieu.carbou@gmail.com)
  */
 public final class SelectionTest {
+    @Rule
+    public final TemporaryFolder temp = new TemporaryFolder();
+
     @Test
     public void test_default_select_all() {
         Selection selection = new Selection(new File("."), new String[0], new String[0], false);
@@ -51,5 +62,47 @@ public final class SelectionTest {
         assertEquals(selection.getIncluded().length, 1);
         assertEquals(selection.getSelectedFiles().length, 0);
         assertTrue(Arrays.asList(selection.getExcluded()).containsAll(Arrays.asList(Default.EXCLUDES)));
+    }
+
+    @Test
+    public void test_exclusions_violated_by_default() throws IOException {
+        createAFakeProject();
+
+        Selection selection = new Selection(temp.getRoot(), new String[]{"**/*.txt"}, new String[] {"**/target/**"}, false);
+
+        assertIncludedFilesInFakeProject(selection);
+        assertEquals(3, selection.getFilesExcluded().length);
+    }
+
+    @Test
+    public void test_exclusions_respect_with_fastScan() throws IOException {
+        createAFakeProject();
+
+        Selection selection = new Selection(temp.getRoot(), new String[]{"**/*.txt"}, new String[] {"**/target/**"}, false);
+        selection.setFastScan(true);
+
+        assertIncludedFilesInFakeProject(selection);
+        assertEquals(0, selection.getFilesExcluded().length);
+    }
+
+    private void assertIncludedFilesInFakeProject(Selection selection) {
+        List<String> selected = new ArrayList<String>(asList(selection.getSelectedFiles()));
+        Collections.sort(selected);
+        assertEquals(asList("included.txt", "module/src/main/java/not-ignored.txt", "module/sub/subsub/src/main/java/not-ignored.txt"), selected);
+    }
+
+    private void createAFakeProject() throws IOException {
+        touch(temp.newFile("included.txt"));
+        touch(new File(temp.newFolder("target"), "ignored.txt"));
+        touch(new File(temp.getRoot(), "module/src/main/java/not-ignored.txt"));
+        touch(new File(temp.getRoot(), "module/target/ignored.txt"));
+        touch(new File(temp.getRoot(), "module/sub/subsub/src/main/java/not-ignored.txt"));
+        touch(new File(temp.getRoot(), "module/sub/subsub/target/foo/not-ignored.txt"));
+    }
+
+    private void touch(final File newFile) throws IOException {
+        newFile.getParentFile().mkdirs();
+        final FileWriter w = new FileWriter(newFile);
+        w.close();
     }
 }

@@ -108,6 +108,14 @@ public class LicenseSet {
     public String[] excludes = new String[0];
 
     /**
+     * If true, excluded folders will not be visited for included files
+     * even if includes use wildcard. This is generally what you aim at
+     * but for compatibility reason default matches the existing behavior.
+     */
+    @Parameter(property = "license.fastScan", defaultValue = "false")
+    public boolean fastScan;
+
+    /**
      * Specify the list of keywords to use to detect a header. A header must
      * include all keywords to be valid. By default, the word 'copyright' is
      * used. Detection is done case insensitive.

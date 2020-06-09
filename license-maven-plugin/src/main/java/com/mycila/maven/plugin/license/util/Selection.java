@@ -16,14 +16,14 @@
 package com.mycila.maven.plugin.license.util;
 
 import com.mycila.maven.plugin.license.Default;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.apache.maven.shared.utils.io.DirectoryScanner;
+import org.apache.maven.shared.utils.io.MatchPatterns;
+import org.apache.maven.shared.utils.io.ScanConductor;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.*;
 import static java.util.Arrays.asList;
 
 /**
@@ -37,6 +37,7 @@ public final class Selection {
     private final String[] excluded;
 
     private DirectoryScanner scanner;
+    private boolean fastScan;
 
     public Selection(File basedir, String[] included, String[] excluded, boolean useDefaultExcludes) {
         this.basedir = basedir;
@@ -48,6 +49,11 @@ public final class Selection {
     public String[] getSelectedFiles() {
         scanIfneeded();
         return scanner.getIncludedFiles();
+    }
+
+    // for tests
+    String[] getFilesExcluded() {
+        return scanner.getExcludedFiles();
     }
 
     public File getBasedir() {
@@ -62,9 +68,34 @@ public final class Selection {
         return excluded;
     }
 
+    public void setFastScan(boolean fastScan) {
+        this.fastScan = fastScan;
+    }
+
+    public boolean isFastScan() {
+        return fastScan;
+    }
+
     private void scanIfneeded() {
         if (scanner == null) {
+            final MatchPatterns excludePatterns = MatchPatterns.from(excluded);
             scanner = new DirectoryScanner();
+            if (fastScan) {
+                scanner.setScanConductor(new ScanConductor() {
+                    @Override
+                    public ScanAction visitDirectory(final String name, final File directory) {
+                        if (excludePatterns.matches(name, true)) {
+                            return ScanAction.ABORT_DIRECTORY;
+                        }
+                        return ScanAction.CONTINUE;
+                    }
+
+                    @Override
+                    public ScanAction visitFile(final String name, final File file) {
+                        return ScanAction.CONTINUE;
+                    }
+                });
+            }
             scanner.setBasedir(basedir);
             scanner.setIncludes(included);
             scanner.setExcludes(excluded);
@@ -106,5 +137,4 @@ public final class Selection {
         overrides.retainAll(asList(includes));
         return overrides.toArray(new String[0]);
     }
-
 }
