@@ -37,7 +37,6 @@ public final class Selection {
     private final String[] excluded;
 
     private DirectoryScanner scanner;
-    private boolean fastScan;
 
     public Selection(File basedir, String[] included, String[] excluded, boolean useDefaultExcludes) {
         this.basedir = basedir;
@@ -68,34 +67,24 @@ public final class Selection {
         return excluded;
     }
 
-    public void setFastScan(boolean fastScan) {
-        this.fastScan = fastScan;
-    }
-
-    public boolean isFastScan() {
-        return fastScan;
-    }
-
     private void scanIfneeded() {
         if (scanner == null) {
             final MatchPatterns excludePatterns = MatchPatterns.from(excluded);
             scanner = new DirectoryScanner();
-            if (fastScan) {
-                scanner.setScanConductor(new ScanConductor() {
-                    @Override
-                    public ScanAction visitDirectory(final String name, final File directory) {
-                        if (excludePatterns.matches(name, true)) {
-                            return ScanAction.ABORT_DIRECTORY;
-                        }
-                        return ScanAction.CONTINUE;
+            scanner.setScanConductor(new ScanConductor() {
+                @Override
+                public ScanAction visitDirectory(final String name, final File directory) {
+                    if (excludePatterns.matches(name, true)) {
+                        return ScanAction.ABORT_DIRECTORY;
                     }
+                    return ScanAction.CONTINUE;
+                }
 
-                    @Override
-                    public ScanAction visitFile(final String name, final File file) {
-                        return ScanAction.CONTINUE;
-                    }
-                });
-            }
+                @Override
+                public ScanAction visitFile(final String name, final File file) {
+                    return ScanAction.CONTINUE;
+                }
+            });
             scanner.setBasedir(basedir);
             scanner.setIncludes(included);
             scanner.setExcludes(excluded);

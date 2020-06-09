@@ -65,21 +65,10 @@ public final class SelectionTest {
     }
 
     @Test
-    public void test_exclusions_violated_by_default() throws IOException {
-        createAFakeProject();
-
-        Selection selection = new Selection(temp.getRoot(), new String[]{"**/*.txt"}, new String[] {"**/target/**"}, false);
-
-        assertIncludedFilesInFakeProject(selection);
-        assertEquals(3, selection.getFilesExcluded().length);
-    }
-
-    @Test
     public void test_exclusions_respect_with_fastScan() throws IOException {
         createAFakeProject();
 
         Selection selection = new Selection(temp.getRoot(), new String[]{"**/*.txt"}, new String[] {"**/target/**"}, false);
-        selection.setFastScan(true);
 
         assertIncludedFilesInFakeProject(selection);
         assertEquals(0, selection.getFilesExcluded().length);
